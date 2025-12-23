@@ -6,7 +6,6 @@
 #include <stdint.h> // uint8_t, uint16_t, uint32_t, uint64_t, int8_t, int16_t, int32_t, int64_t
 #include <stddef.h> // size_t, ssize_t, NULL
 #include <stdlib.h> // malloc, realloc, free
-#include <assert.h> // assert
 
 #include "macro.h"
 #include "logger.h"
@@ -21,88 +20,114 @@ typedef struct DynamicArray {
 
 where `void` has to be replaced with a type. */
 
-#ifndef DA_MIN_CAP
-#define DA_MIN_CAP (512)
-#endif // DA_MIN_CAP
+#ifndef AE_DA_MIN_CAP
+#define AE_DA_MIN_CAP (512)
+#endif // AE_DA_MIN_CAP
 
-#define DA_NEW(da)                      ((da){.capacity=0, .length=0, .items=NULL})
-#define DA_FROM_PTR(da, ptr, count)     (UNIMPLEMENTED("DA_FORM_PTR"))
-#define DA_FROM_ARRAY(da, array, count) (UNIMPLEMENTED("DA_FROM_ARRAY"))
+#define AE_DA_NEW(da)                      ((da){.capacity=0, .length=0, .items=NULL})
+#define AE_DA_FROM_PTR(da, ptr, count)     (UNIMPLEMENTED("DA_FORM_PTR"))
+#define AE_DA_FROM_ARRAY(da, array, count) (UNIMPLEMENTED("DA_FROM_ARRAY"))
 
-#define DA_DELETE(da) ({    \
+#define AE_DA_DELETE(da) ({ \
     free((da).items);       \
     (da).items    = NULL;   \
     (da).length   = 0;      \
     (da).capacity = 0;      \
 })
 
-#define DA_GET(da, index)            (UNIMPLEMENTED("DA_GET"))
-#define DA_ALLOC(da, length)         (UNIMPLEMENTED("DA_ALLOC"))
-#define DA_PUSHF(da, item)           (UNIMPLEMENTED("DA_PUSHF"))
-#define DA_POPF(da)                  (UNIMPLEMENTED("DA_POPF"))
-#define DA_APPENDF(da, items, count) (UNIMPLEMENTED("DA_APPENDF"))
-#define DA_PUSHB(da, item)           (UNIMPLEMENTED("DA_PUSHB"))
-#define DA_POPB(da)                  (UNIMPLEMENTED("DA_POPB"))
-#define DA_APPENDB(da, items, count) (UNIMPLEMENTED("DA_APPENDB"))
+#define AE_DA_GET(da, index)                 (UNIMPLEMENTED("DA_GET"))
+#define AE_DA_ALLOC(da, length)              (UNIMPLEMENTED("DA_ALLOC"))
+#define AE_DA_PUSH_FRONT(da, item)           (UNIMPLEMENTED("DA_PUSHF"))
+#define AE_DA_POP_FRONT(da)                  (UNIMPLEMENTED("DA_POPF"))
+#define AE_DA_APPEND_FRONT(da, items, count) (UNIMPLEMENTED("DA_APPENDF"))
+#define AE_DA_PUSH_BACK(da, item)            (UNIMPLEMENTED("DA_PUSHB"))
+#define AE_DA_POP_BACK(da)                   (UNIMPLEMENTED("DA_POPB"))
+#define AE_DA_APPEND_BACK(da, items, count)  (UNIMPLEMENTED("DA_APPENDB"))
 
-typedef struct U8_DA {
+typedef struct AE_U8_DA {
     size_t  capacity;
     size_t  length;
     uint8_t *items;
-} U8_DA;
+} AE_U8_DA;
 
-typedef struct U16_DA {
+typedef struct AE_U16_DA {
     size_t   capacity;
     size_t   length;
     uint16_t *items;
-} U16_DA;
+} AE_U16_DA;
 
-typedef struct U32_DA {
+typedef struct AE_U32_DA {
     size_t   capacity;
     size_t   length;
-    uint32_ t *items;
-} U32_DA;
+    uint32_t *items;
+} AE_U32_DA;
 
-typedef struct U64_DA {
+typedef struct AE_U64_DA {
     size_t   capacity;
     size_t   length;
     uint64_t *items;
-} U64_DA;
+} AE_U64_DA;
 
-typedef struct USIZE_DA {
+typedef struct AE_USIZE_DA {
     size_t capacity;
     size_t length;
     size_t *items;
-} USIZE_DA;
+} AE_USIZE_DA;
 
-typedef struct I8_DA {
+typedef struct AE_I8_DA {
     size_t capacity;
     size_t length;
     int8_t *items;
-} I8_DA;
+} AE_I8_DA;
 
-typedef struct I16_DA {
+typedef struct AE_I16_DA {
     size_t  capacity;
     size_t  length;
     int16_t *items;
-} I16_DA;
+} AE_I16_DA;
 
-typedef struct I32_DA {
+typedef struct AE_I32_DA {
     size_t  capacity;
     size_t  length;
     int32_t *items;
-} I32_DA;
+} AE_I32_DA;
 
-typedef struct I64_DA {
+typedef struct AE_I64_DA {
     size_t  capacity;
     size_t  length;
     int64_t *items;
-} I64_DA;
+} AE_I64_DA;
 
-typedef struct ISIZE_DA {
+typedef struct AE_ISIZE_DA {
     size_t  capacity;
     size_t  length;
     ssize_t *items;
-} ISIZE_DA;
+} AE_ISIZE_DA;
+
+#ifndef NO_STRIP_AE_PREFIX
+#define DA_MIN_CAP      AE_DA_MIN_CAP
+#define DA_NEW          AE_DA_NEW
+#define DA_FROM_PTR     AE_DA_FROM_PTR
+#define DA_FROM_ARRAY   AE_DA_FROM_ARRAY
+#define DA_DELETE       AE_DA_DELETE
+#define DA_GET          AE_DA_GET
+#define DA_ALLOC        AE_DA_ALLOC
+#define DA_PUSH_FRONT   AE_DA_PUSH_FRONT
+#define DA_POP_FRONT    AE_DA_POP_FRONT
+#define DA_APPEND_FRONT AE_DA_APPEND_FRONT
+#define DA_PUSH_BACK    AE_DA_PUSH_BACK
+#define DA_POP_BACK     AE_DA_POP_BACK
+#define DA_APPEND_BACK  AE_DA_APPEND_BACK
+#define U8_DA           AE_U8_DA
+#define U16_DA          AE_U16_DA
+#define U32_DA          AE_U32_DA
+#define U64_DA          AE_U64_DA
+#define USIZE_DA        AE_USIZE_DA
+#define I8_DA           AE_I8_DA
+#define I16_DA          AE_I16_DA
+#define I32_DA          AE_I32_DA
+#define I64_DA          AE_I64_DA
+#define ISIZE_DA        AE_ISIZE_DA
+#endif // NO_STRIP_AE_PREFIX
 
 #endif // __DYNAMIC_ARRAY_H__

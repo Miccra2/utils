@@ -39,7 +39,7 @@ ENDM
 
 #define ASSERT(cond, fmt, ...)                                  \
 MACRO                                                           \
-    if (cond) {                                                 \
+    if (!(cond)) {                                              \
         LOGGER(LOG_ASSERT, fmt __VA_OPT__(,) __VA_ARGS__);      \
         abort();                                                \
     }                                                           \
@@ -137,7 +137,7 @@ ENDM
 #define INFO(fmt, ...)                                          \
 MACRO                                                           \
     LOGGER(LOG_INFO, fmt __VA_OPT__(,) __VA_ARGS__);            \
-    abrot();                                                    \
+    abort();                                                    \
 ENDM
 #endif
 
@@ -156,7 +156,7 @@ static LoggerInfo __logger_info = (LoggerInfo){
     .path     = NULL,
     .text     = NULL,
     .text_end = NULL,
-    .position = new_position(NULL, NULL, NULL, 0),
+    .position = (Position){NULL, NULL, NULL, 0},
 };
 
 LoggerInfo get_logger_info(void);
@@ -203,7 +203,8 @@ void __logger_print(LogLevel level, char *fmt, ...) {
     va_start(args, fmt);
     vfprintf(__logger_info.fd, fmt, args);
     va_end(args);
+    fprintf(__logger_info.fd, "\n");
 }
 
-#else // NO_LOGGER_IMPLEMENTATION
+#endif // NO_LOGGER_IMPLEMENTATION
 #endif // __LOGGER_H__
