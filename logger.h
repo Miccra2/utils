@@ -25,119 +25,119 @@ typedef enum LogLevel {
     LOG_NONE,           // print default logging message or collect message if COLLECT_LOGGER is defined
 } LogLevel;
 
-#ifndef COLLECT_PATH
-#define COLLECT_PATH "tmp.txt"
-#endif // COLLECT_PATH
+#ifndef AE_COLLECT_PATH
+#define AE_COLLECT_PATH "tmp.txt"
+#endif // AE_COLLECT_PATH
 
-#define LOGGER(level, fmt, ...) (__logger_print(level, fmt __VA_OPT__(,) __VA_ARGS__))
+#define AE_LOGGER(level, fmt, ...) (__logger_print(level, (fmt) __VA_OPT__(,) __VA_ARGS__))
 
-#define PANIC(fmt, ...)                                         \
-MACRO                                                           \
-    LOGGER(LOG_PANIC, fmt __VA_OPT__(,) __VA_ARGS__);           \
-    abort();                                                    \
+#define AE_PANIC(fmt, ...)                                       \
+MACRO                                                            \
+    AE_LOGGER(LOG_PANIC, (fmt) __VA_OPT__(,) __VA_ARGS__);       \
+    abort();                                                     \
 ENDM
 
-#define ASSERT(cond, fmt, ...)                                  \
-MACRO                                                           \
-    if (!(cond)) {                                              \
-        LOGGER(LOG_ASSERT, fmt __VA_OPT__(,) __VA_ARGS__);      \
-        abort();                                                \
-    }                                                           \
+#define AE_ASSERT(cond, fmt, ...)                                \
+MACRO                                                            \
+    if (!(cond)) {                                               \
+        AE_LOGGER(LOG_ASSERT, (fmt) __VA_OPT__(,) __VA_ARGS__);  \
+        abort();                                                 \
+    }                                                            \
 ENDM
 
 #if defined(COLLECT_ERRORS) || defined(COLLECT_LOGGER)
 #ifndef COLLECT_PATH
 #error "COLLECT_PATH not defiend!"
 #endif // COLLECT_PATH
-#define ERROR(fmt, ...)                                         \
-MACRO                                                           \
-    LoggerInfo info = get_logger_info();                        \
-    LoggerInfo logging_info = info;                             \
-    logging_info.fd = fopen(COLLECT_PATH, "w");                 \
-    set_logger_info(logging_info);                              \
-    LOGGER(LOG_ERROR, fmt, __VA_OPT__(,) __VA_ARGS__);          \
-    fclose(logging_info.fd);                                    \
-    set_logger_info(info);                                      \
+#define AE_ERROR(fmt, ...)                                       \
+MACRO                                                            \
+    LoggerInfo info = get_logger_info();                         \
+    LoggerInfo logging_info = info;                              \
+    logging_info.fd = fopen(COLLECT_PATH, "w");                  \
+    set_logger_info(logging_info);                               \
+    AE_LOGGER(LOG_ERROR, (fmt) __VA_OPT__(,) __VA_ARGS__);       \
+    fclose(logging_info.fd);                                     \
+    set_logger_info(info);                                       \
 ENDM
 #else // defined(COLLECT_ERRORS) || defined(COLLECT_LOGGER)
-#define ERROR(fmt, ...)                                         \
-MACRO                                                           \
-    LOGGER(LOG_ERROR, fmt __VA_OPT__(,) __VA_ARGS__);           \
-    abort();                                                    \
+#define AE_ERROR(fmt, ...)                                       \
+MACRO                                                            \
+    AE_LOGGER(LOG_ERROR, (fmt) __VA_OPT__(,) __VA_ARGS__);       \
+    abort();                                                     \
 ENDM
 #endif // defiend(COLLECT_ERRORS) || defined(COLLECT_LOGGER)
 
-#define DEPRACTED(fmt, ...)                                     \
-MACRO                                                           \
-    LOGGER(LOG_DEPRACTED, fmt __VA_OPT__(,) __VA_ARGS__);       \
-    abort();                                                    \
+#define AE_DEPRACTED(fmt, ...)                                   \
+MACRO                                                            \
+    AE_LOGGER(LOG_DEPRACTED, (fmt) __VA_OPT__(,) __VA_ARGS__);   \
+    abort();                                                     \
 ENDM
 
-#define UNSUPPORTED(fmt, ...)                                   \
-MACRO                                                           \
-    LOGGER(LOG_UNSUPPORTED, fmt __VA_OPT__(,) __VA_ARGS__);     \
-    abort();                                                    \
+#define AE_UNSUPPORTED(fmt, ...)                                 \
+MACRO                                                            \
+    AE_LOGGER(LOG_UNSUPPORTED, (fmt) __VA_OPT__(,) __VA_ARGS__); \
+    abort();                                                     \
 ENDM
 
-#define UNIMPLEMENTED(fmt, ...)                                 \
-MACRO                                                           \
-    LOGGER(LOG_UNIMPLEMENTED, fmt __VA_OPT__(,) __VA_ARGS__);   \
-    abort();                                                    \
+#define AE_UNIMPLEMENTED(fmt, ...)                               \
+MACRO                                                            \
+    LOGGER(LOG_UNIMPLEMENTED, (fmt) __VA_OPT__(,) __VA_ARGS__);  \
+    abort();                                                     \
 ENDM
 
 #ifdef NODEBUG
-#define LOG_DBG(...)
+#define AE_LOG_DBG(...)
 #else // NODEBUG
-#define LOG_DBG(fmt, ...) (LOGGER(LOG_DBG, fmt __VA_OPT__(,) __VA_ARGS__))
+#define AE_LOG_DBG(fmt, ...) (LOGGER(LOG_DEBUG, (fmt) __VA_OPT__(,) __VA_ARGS__))
 #endif // NODEBUG
 
-#define TODO(fmt, ...)                                          \
-MACRO                                                           \
-    LOGGER(LOG_TODO, fmt __VA_OPT__(,) __VA_ARGS__);            \
-    abort();                                                    \
+#define AE_TODO(fmt, ...)                                        \
+MACRO                                                            \
+    AE_LOGGER(LOG_TODO, (fmt) __VA_OPT__(,) __VA_ARGS__);        \
+    abort();                                                     \
 ENDM
 
 #if defined(COLLECT_WARNINGS) || defined(COLLECT_LOGGER)
-#ifndef COLLECT_PATH
-#error "COLLECT_PATH not defined!"
-#endif // COLLECT_PATH
-#define WARNING(fmt, ...)                                       \
-MACRO                                                           \
-    LoggerInfo info = get_logger_info();                        \
-    LoggerInfo logging_info = info;                             \
-    logging_info.fd = fopen(COLLECT_PATH, "w");                 \
-    set_logger_info(logging_info);                              \
-    LOGGER(LOG_WARNING, fmt, __VA_OPT__(,) __VA_ARGS__);        \
-    fclose(logging_info.fd);                                    \
-    set_logger_info(info);                                      \
+#ifndef AE_COLLECT_PATH
+#error "AE_COLLECT_PATH not defined!"
+#endif // AE_COLLECT_PATH
+#define AE_WARNING(fmt, ...)                                     \
+MACRO                                                            \
+    LoggerInfo info = get_logger_info();                         \
+    LoggerInfo logging_info = info;                              \
+    logging_info.fd = fopen(AE_COLLECT_PATH, "w");               \
+    set_logger_info(logging_info);                               \
+    AE_LOGGER(LOG_WARNING, (fmt) __VA_OPT__(,) __VA_ARGS__);     \
+    fclose(logging_info.fd);                                     \
+    set_logger_info(info);                                       \
 ENDM
 #else // defined(COLLECT_WARNINGS) || defined(COLLECT_LOGGER)
-#define WARNING(fmt, ...)                                       \
-MACRO                                                           \
-    LOGGER(LOG_WARNING, fmt __VA_OPT__(,) __VA_ARGS__);         \
-    abort();                                                    \
+#define AE_WARNING(fmt, ...)                                     \
+MACRO                                                            \
+    AE_LOGGER(LOG_WARNING, (fmt) __VA_OPT__(,) __VA_ARGS__);     \
+    abort();                                                     \
 ENDM
 #endif // defined(COLLECT_WARNINGS) || defiend(COLLECT_LOGGER)
 
 #if defiend(COLLECT_INFOS) || defined(COLLECT_LOGGER)
-#ifndef COLLECT_PATH
-#error "COLLECT_PATH not defined!"
-#endif // COLLECT_PATH
-#define INFO(fmt, ...)                                          \
-MACRO                                                           \
-    LoggerInfo info = get_logger_info();                        \
-    LoggerInfo logging_info = info;                             \
-    logging_info.fd = fopen(COLLECT_PATH, "w");                 \
-    set_logger_info(logging_info);                              \
-    LOGGER(LOG_INFO, fmt, __VA_OPT__(,) __VA_ARGS__);           \
-    fclose(logging_info.fd);                                    \
-    set_logger_info(info);                                      \
+#ifndef AE_COLLECT_PATH
+#error "AE_COLLECT_PATH not defined!"
+#endif // AE_COLLECT_PATH
+#define AE_INFO(fmt, ...)                                        \
+MACRO                                                            \
+    LoggerInfo info = get_logger_info();                         \
+    LoggerInfo logging_info = info;                              \
+    logging_info.fd = fopen(AE_COLLECT_PATH, "w");               \
+    set_logger_info(logging_info);                               \
+    AE_LOGGER(LOG_INFO, (fmt) __VA_OPT__(,) __VA_ARGS__);        \
+    fclose(logging_info.fd);                                     \
+    set_logger_info(info);                                       \
 ENDM
 #else // defined(COLLECT_INFOS) || defined(COLLECT_LOGGER)
-#define INFO(fmt, ...)                                          \
-MACRO                                                           \
-    LOGGER(LOG_INFO, fmt __VA_OPT__(,) __VA_ARGS__);            \
-    abort();                                                    \
+#define AE_INFO(fmt, ...)                                        \
+MACRO                                                            \
+    AE_LOGGER(LOG_INFO, (fmt) __VA_OPT__(,) __VA_ARGS__);        \
+    abort();                                                     \
 ENDM
 #endif
 
@@ -207,4 +207,23 @@ void __logger_print(LogLevel level, char *fmt, ...) {
 }
 
 #endif // NO_LOGGER_IMPLEMENTATION
+
+#ifndef NO_STRIP_AE_PREFIX
+#define LOGGER(level, fmt, ...) AE_LOGGER(level, fmt, ...)
+#define PANIC(fmt, ...)         AE_PANIC(fmt, ...)
+#define ASSERT(cond, fmt, ...)  AE_ASSERT(cond, fmt, ...)
+#define ERROR(fmt, ...)         AE_ERROR(fmt, ...)
+#define ERROR(fmt, ...)         AE_ERROR(fmt, ...)
+#define DEPRACTED(fmt, ...)     AE_DEPRACTED(fmt, ...)
+#define UNSUPPORTED(fmt, ...)   AE_UNSUPPORTED(fmt, ...)
+#define UNIMPLEMENTED(fmt, ...) AE_UNIMPLEMENTED(fmt, ...)
+#define LOG_DBG(...)            AE_LOG_DBG(...)
+#define LOG_DBG(fmt, ...)       AE_LOG_DBG(fmt, ...)
+#define TODO(fmt, ...)          AE_TODO(fmt, ...)
+#define WARNING(fmt, ...)       AE_WARNING(fmt, ...)
+#define WARNING(fmt, ...)       AE_WARNING(fmt, ...)
+#define INFO(fmt, ...)          AE_INFO(fmt, ...)
+#define INFO(fmt, ...)          AE_INFO(fmt, ...)
+#endif // NO_STRIP_AE_PREFIX
+
 #endif // __LOGGER_H__

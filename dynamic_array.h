@@ -28,14 +28,18 @@ where `void` has to be replaced with a type. */
 #define AE_DA_FROM_PTR(da, ptr, count)     (UNIMPLEMENTED("DA_FORM_PTR"))
 #define AE_DA_FROM_ARRAY(da, array, count) (UNIMPLEMENTED("DA_FROM_ARRAY"))
 
-#define AE_DA_DELETE(da) ({ \
+#define AE_DA_DELETE(da)    \
+MACRO                       \
     free((da).items);       \
     (da).items    = NULL;   \
     (da).length   = 0;      \
     (da).capacity = 0;      \
-})
+ENDM
 
-#define AE_DA_GET(da, index)                 (UNIMPLEMENTED("DA_GET"))
+#define AE_DA_GET(da, index)
+MACRO
+    AE_ASSERT();
+ENDM
 #define AE_DA_ALLOC(da, length)              (UNIMPLEMENTED("DA_ALLOC"))
 #define AE_DA_PUSH_FRONT(da, item)           (UNIMPLEMENTED("DA_PUSHF"))
 #define AE_DA_POP_FRONT(da)                  (UNIMPLEMENTED("DA_POPF"))
@@ -105,19 +109,18 @@ typedef struct AE_ISIZE_DA {
 } AE_ISIZE_DA;
 
 #ifndef NO_STRIP_AE_PREFIX
-#define DA_MIN_CAP      AE_DA_MIN_CAP
-#define DA_NEW          AE_DA_NEW
-#define DA_FROM_PTR     AE_DA_FROM_PTR
-#define DA_FROM_ARRAY   AE_DA_FROM_ARRAY
-#define DA_DELETE       AE_DA_DELETE
-#define DA_GET          AE_DA_GET
-#define DA_ALLOC        AE_DA_ALLOC
-#define DA_PUSH_FRONT   AE_DA_PUSH_FRONT
-#define DA_POP_FRONT    AE_DA_POP_FRONT
-#define DA_APPEND_FRONT AE_DA_APPEND_FRONT
-#define DA_PUSH_BACK    AE_DA_PUSH_BACK
-#define DA_POP_BACK     AE_DA_POP_BACK
-#define DA_APPEND_BACK  AE_DA_APPEND_BACK
+#define DA_NEW(da)                        AE_DA_NEW(da)
+#define DA_FROM_PTR(da, ptr, count)       AE_DA_FROM_PTR(da, ptr, count)
+#define DA_FROM_ARRAY(da, array, count)   AE_DA_FROM_ARRAY(da, array, count)
+#define DA_DELETE(da)                     AE_DA_DELETE(da)
+#define DA_GET(da, index)                 AE_DA_GET(da, index)
+#define DA_ALLOC(da, length)              AE_DA_ALLOC(da, length)
+#define DA_PUSH_FRONT(da, item)           AE_DA_PUSH_FRONT(da, item)
+#define DA_POP_FRONT(da)                  AE_DA_POP_FRONT(da)
+#define DA_APPEND_FRONT(da, items, count) AE_DA_APPEND_FRONT(da, items, count)
+#define DA_PUSH_BACK(da, item)            AE_DA_PUSH_BACK(da, item)
+#define DA_POP_BACK(da)                   AE_DA_POP_BACK(da)
+#define DA_APPEND_BACK(da, items, count)  AE_DA_APPEND_BACK(da, items, count)
 #define U8_DA           AE_U8_DA
 #define U16_DA          AE_U16_DA
 #define U32_DA          AE_U32_DA
